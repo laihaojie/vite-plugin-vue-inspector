@@ -141,13 +141,12 @@ export function normalizeComboKeyPrint(toggleComboKey: string) {
 export const DEFAULT_INSPECTOR_OPTIONS: VitePluginInspectorOptions = {
   vue: 3,
   enabled: false,
-  toggleComboKey: process.platform === 'darwin' ? 'meta' : 'control',
+  toggleComboKey: process.platform === 'darwin' ? 'meta-shift' : 'control',
   toggleButtonVisibility: 'never',
   toggleButtonPos: 'top-right',
   appendTo: '',
   longPress: true,
   longPressTime: 500,
-  openInEditorHost: false,
   lazyLoad: false,
   launchEditor: process.env.LAUNCH_EDITOR ?? 'code',
 } as const
@@ -247,7 +246,7 @@ function VitePluginInspector(options: VitePluginInspectorOptions = DEFAULT_INSPE
               injectTo: 'head',
               attrs: {
                 type: 'module',
-                src: '/@id/virtual:vue-inspector-path:load.js',
+                src: `${config.base || '/'}@id/virtual:vue-inspector-path:load.js`,
               },
             },
           ],
