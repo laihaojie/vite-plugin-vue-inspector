@@ -8,7 +8,13 @@ const KEY_IGNORE = 'data-v-inspector-ignore'
 const KEY_PROPS_DATA = '__v_inspector'
 
 function getData(el) {
-  return el?.__vnode?.props?.[KEY_PROPS_DATA] ?? el?.getAttribute?.(KEY_DATA)
+  return el?.__vnode?.props?.[KEY_PROPS_DATA] ?? getComponentData(el) ?? el?.getAttribute?.(KEY_DATA)
+}
+
+function getComponentData(el) {
+  const ctxVNode = el?.__vnode?.ctx?.vnode
+  if (ctxVNode?.el === el)
+    return ctxVNode?.props?.[KEY_PROPS_DATA]
 }
 
 export default {
@@ -36,6 +42,7 @@ export default {
         column: 0,
       },
       KEY_IGNORE,
+      animation: !inspectorOptions.reduceMotion,
     }
   },
   computed: {
@@ -69,6 +76,9 @@ export default {
 
       x = Math.max(margin, x)
       x = Math.min(x, window.innerWidth - floatsWidth - margin)
+      if (x < floatsWidth / 2) {
+        x = floatsWidth / 2 + margin
+      }
 
       y = Math.max(margin, y)
       y = Math.min(y, window.innerHeight - floatsHeight - margin)
@@ -271,7 +281,7 @@ export default {
        * https://github.com/vitejs/vite/blob/d59e1acc2efc0307488364e9f2fad528ec57f204/packages/vite/src/node/server/index.ts#L569-L570
        */
 
-      const _url = baseUrl instanceof URL ? baseUrl : `${baseUrl}/__open-in-editor?file=${file}:${line}:${column}`
+      const _url = baseUrl instanceof URL ? baseUrl : `${baseUrl}/__open-in-editor?file=${encodeURIComponent(`${file}:${line}:${column}`)}`
       const promise = fetch(
         _url,
         {
@@ -340,13 +350,20 @@ export default {
     </div>
     <!-- Overlay -->
     <template v-if="overlayVisible && linkParams">
-      <div ref="floatsRef" class="vue-inspector-floats vue-inspector-card" :style="floatsStyle">
+      <div
+        ref="floatsRef"
+        class="vue-inspector-floats vue-inspector-card" :class="[{ 'vue-inspector-animated': animation }]"
+        :style="floatsStyle"
+      >
         <div>{{ linkParams.title }}:{{ linkParams.line }}:{{ linkParams.column }}</div>
         <div class="tip">
           Click to go to the file
         </div>
       </div>
-      <div class="vue-inspector-size-indicator" :style="sizeIndicatorStyle" />
+      <div
+        class="vue-inspector-size-indicator" :class="[{ 'vue-inspector-animated': animation }]"
+        :style="sizeIndicatorStyle"
+      />
     </template>
   </div>
 </template>
@@ -396,7 +413,6 @@ export default {
   z-index: 2147483647;
   position: fixed;
   transform: translateX(-50%);
-  transition: all 0.1s ease-in;
   pointer-events: none;
 }
 
@@ -406,7 +422,16 @@ export default {
   background-color: #42b88325;
   border: 1px solid #42b88350;
   border-radius: 5px;
-  transition: all 0.1s ease-in;
   pointer-events: none;
+}
+
+.vue-inspector-animated {
+  transition: all 0.1s ease-in;
+}
+
+@media (prefers-reduced-motion) {
+  .vue-inspector-animated {
+    transition: none !important;
+  }
 }
 </style>

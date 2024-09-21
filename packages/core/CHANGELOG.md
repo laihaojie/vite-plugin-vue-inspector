@@ -1,6 +1,21 @@
 # vite-plugin-vue-inspector
 
-## 8.0.0
+## 5.2.0
+
+### Minor Changes
+
+- feat: inspect external component (#91)
+- feat: introduce reduceMotion option (#102)
+- chore: adjust the position of floating elements on the x-axis (#105)
+- feat: exclude template tag to support jsx-directive (#106)
+
+## 5.1.3
+
+### Patch Changes
+
+- fix: escaping special characters
+
+## 5.1.2
 
 ### Major Changes
 

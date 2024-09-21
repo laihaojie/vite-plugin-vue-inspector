@@ -30,7 +30,7 @@ export async function compileSFCTemplate(
           nodeTransforms: [
             (node) => {
               if (node.type === 1) {
-                if (node.tagType === 0 && !EXCLUDE_TAG.includes(node.tag)) {
+                if ((node.tagType === 0 || node.tagType === 1) && !EXCLUDE_TAG.includes(node.tag)) {
                   if (node.loc.source.includes(KEY_DATA))
                     return
 
@@ -77,7 +77,7 @@ export async function compileSFCTemplate(
 
         babelTraverse(ast, {
           enter({ node }) {
-            if (node.type === 'JSXElement') {
+            if (node.type === 'JSXElement' && !EXCLUDE_TAG.includes(s.slice(node.openingElement.name.start, node.openingElement.name.end))) {
               if (node.openingElement.attributes.some(attr => attr.type !== 'JSXSpreadAttribute' && attr.name.name === KEY_DATA,
               ))
                 return

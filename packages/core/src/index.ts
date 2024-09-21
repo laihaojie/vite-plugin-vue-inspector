@@ -121,6 +121,12 @@ export interface VitePluginInspectorOptions {
    * @default process.env.LAUNCH_EDITOR ?? code (Visual Studio Code)
    */
   launchEditor?: 'appcode' | 'atom' | 'atom-beta' | 'brackets' | 'clion' | 'code' | 'code-insiders' | 'codium' | 'emacs' | 'idea' | 'notepad++' | 'pycharm' | 'phpstorm' | 'rubymine' | 'sublime' | 'vim' | 'visualstudio' | 'webstorm' | 'rider' | string
+
+  /**
+   * Disable animation/transition, will auto disable when `prefers-reduced-motion` is set
+   * @default false
+   */
+  reduceMotion?: boolean
 }
 
 const toggleComboKeysMap = {
@@ -149,6 +155,7 @@ export const DEFAULT_INSPECTOR_OPTIONS: VitePluginInspectorOptions = {
   longPressTime: 500,
   lazyLoad: false,
   launchEditor: process.env.LAUNCH_EDITOR ?? 'code',
+  reduceMotion: false,
 } as const
 
 function VitePluginInspector(options: VitePluginInspectorOptions = DEFAULT_INSPECTOR_OPTIONS): PluginOption {
@@ -272,7 +279,7 @@ function VitePluginInspector(options: VitePluginInspectorOptions = DEFAULT_INSPE
         const fn = new Set<string>()
         const s = new MagicString(code)
 
-        s.replace(/(createElementVNode|createVNode|createElementBlock) as _\1,?/g, (_, name) => {
+        s.replace(/(createElementVNode|createVNode|createElementBlock|createBlock) as _\1,?/g, (_, name) => {
           fn.add(name)
           return ''
         })
