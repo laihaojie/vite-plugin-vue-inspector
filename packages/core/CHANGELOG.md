@@ -1,5 +1,11 @@
 # vite-plugin-vue-inspector
 
+## 8.0.2
+
+### Patch Changes
+
+- 合并
+
 ## 8.0.1
 
 ### Patch Changes

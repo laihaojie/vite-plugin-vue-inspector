@@ -1,5 +1,13 @@
 # unplugin-vue-inspector
 
+## 5.0.2
+
+### Patch Changes
+
+- 合并
+- Updated dependencies
+  - @djie/vite-plugin-vue-inspector@8.0.2
+
 ## 5.0.1
 
 ### Patch Changes
